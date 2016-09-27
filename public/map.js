@@ -7,7 +7,7 @@ var Map = function(container, coords, zoom){
 }
 
 Map.prototype = {
- addMarker: function(coords, info){
+ addMarker: function(coords, info, popUp){
     var marker = new google.maps.Marker({
       position: coords,
       map: this.googleMap
@@ -15,6 +15,9 @@ Map.prototype = {
     var infoWindow = new google.maps.InfoWindow({
       content: info
     })
+    if(popUp){      
+      infoWindow.open(this.googleMap, marker);
+    }
     marker.addListener("click", function(){
       infoWindow.open(this.googleMap, marker);
     })
@@ -23,52 +26,38 @@ Map.prototype = {
     google.maps.event.addListener(this.googleMap, "click", function(event){
       var position = {lat:event.latLng.lat(), lng:event.latLng.lng()}
       var direction = this.howClose(position);
-      console.log(direction);
       this.addMarker(position, direction);
     }.bind(this))
   },
   howClose: function(coords){
     var direction = "";
-    var differenceLat = coords.lat - this.googleMap.center.lat();
-    var differenceLng = coords.lng - this.googleMap.center.lng();
-      if(differenceLat < 0.05  && differenceLng > 0){
-        console.log("positive")
-        if(differenceLng < 0.05 && differenceLng > 0){
-          console.log(differenceLat);
-          console.log(differenceLng);
-          this.foundCenter();
-        }else if(differenceLng > -0.05 && differenceLng < 0){
-          console.log(differenceLat);
-          console.log(differenceLng);
-          this.foundCenter();
-        }
+    var differenceLat = Math.abs(coords.lat - this.googleMap.center.lat());
+    var differenceLng = Math.abs(coords.lng - this.googleMap.center.lng());
+
+    if(differenceLat < 0.05  && differenceLng > 0){
+      if(differenceLng < 0.05 && differenceLng > 0){
+        this.foundCenter();
       };
-      if(differenceLat > -0.05  && differenceLng < 0){
-        console.log("negative")
-        if(differenceLng > -0.05 && differenceLng < 0){
-          console.log(differenceLat);
-          console.log(differenceLng);
-          this.foundCenter();
-        }else if(differenceLng < 0.05 && differenceLng > 0){
-          console.log(differenceLat);
-          console.log(differenceLng);
-          this.foundCenter();
-        }
-      };
-    
-    if(differenceLat < 0 ){
-      direction  = "Above ";
-    }else {
-      direction = "Below ";
     };
-    if(differenceLng < 0){
+    
+    direction = this.directionAway(differenceLat, differenceLat);
+    return direction;
+  },
+  foundCenter: function(){
+    this.addMarker(this.googleMap.center, "Found It", true);
+  }, 
+  directionAway: function(diffLat, diffLng){
+    var direction = "";
+    if(diffLat < 0 ){
+      direction  += "Above ";
+    }else {
+      direction += "Below ";
+    };
+    if(diffLng < 0){
       direction += "and Right";
     }else{
       direction += "and Left";
     }
     return direction;
-  },
-  foundCenter: function(){
-    this.addMarker(this.googleMap.center, "Found It");
   }
 }
