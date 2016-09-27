@@ -1,12 +1,12 @@
 var idle = function(container, coordinates){
   var map =new Map(container, coordinates, 10);
-  map.addMarker(coordinates);
   map.addClickEvent();
 }
 
 var newGame = function(container){
   var newYork = {lat: 40.712784, lng: -74.005941};
-  var map = new Map(container, newYork, 10);
+  var map = new Map(container, newYork, 15);
+  map.addMarker(newYork);
   map.addClickEvent();
 }
 
@@ -27,7 +27,9 @@ var initilize = function(){
   idle(container, onStart);
   var button = createButton();
   addButtonToPage(button);
-  button.onclick = console.log("pressed");
+  button.onclick = function(){
+    newGame(container);
+  };
 }
 
 window.onload = initilize;
