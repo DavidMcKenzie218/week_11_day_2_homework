@@ -31,9 +31,31 @@ Map.prototype = {
     var direction = "";
     var differenceLat = coords.lat - this.googleMap.center.lat();
     var differenceLng = coords.lng - this.googleMap.center.lng();
-    if(differenceLat < 0.00001 && differenceLng < 0.00001){
-      this.foundCenter();
-    }
+      if(differenceLat < 0.05  && differenceLng > 0){
+        console.log("positive")
+        if(differenceLng < 0.05 && differenceLng > 0){
+          console.log(differenceLat);
+          console.log(differenceLng);
+          this.foundCenter();
+        }else if(differenceLng > -0.05 && differenceLng < 0){
+          console.log(differenceLat);
+          console.log(differenceLng);
+          this.foundCenter();
+        }
+      };
+      if(differenceLat > -0.05  && differenceLng < 0){
+        console.log("negative")
+        if(differenceLng > -0.05 && differenceLng < 0){
+          console.log(differenceLat);
+          console.log(differenceLng);
+          this.foundCenter();
+        }else if(differenceLng < 0.05 && differenceLng > 0){
+          console.log(differenceLat);
+          console.log(differenceLng);
+          this.foundCenter();
+        }
+      };
+    
     if(differenceLat < 0 ){
       direction  = "Above ";
     }else {
