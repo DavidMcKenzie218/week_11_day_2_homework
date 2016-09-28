@@ -31,11 +31,13 @@ Map.prototype = {
   },
   howClose: function(coords){
     var direction = "";
-    var differenceLat = Math.abs(coords.lat - this.googleMap.center.lat());
-    var differenceLng = Math.abs(coords.lng - this.googleMap.center.lng());
+    var differenceLat = coords.lat - this.googleMap.center.lat();
+    var differenceLng = coords.lng - this.googleMap.center.lng();
+    var mapDiffLat = Math.abs(differenceLat);
+    var mapDiffLng = Math.abs(differenceLng);
 
-    if(differenceLat < 0.05  && differenceLng > 0){
-      if(differenceLng < 0.05 && differenceLng > 0){
+    if(mapDiffLat < 0.05  && mapDiffLat > 0){
+      if(mapDiffLng < 0.05 && mapDiffLng > 0){
         this.foundCenter();
       };
     };
